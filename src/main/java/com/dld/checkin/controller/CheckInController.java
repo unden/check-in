@@ -9,6 +9,7 @@ import com.dld.checkin.service.CheckInService;
 import com.dld.checkin.util.CheckInUtil;
 import com.dld.checkin.util.ResponseEnum;
 import com.dld.checkin.util.ResponseUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 
+@Slf4j
 @RestController
 @RequestMapping("check-in")
 public class CheckInController {
@@ -34,6 +36,7 @@ public class CheckInController {
 
     @PostMapping
     public ResponseUtil checkIn(@RequestBody CheckInRequest checkInRequest) {
+        log.info("CheckInController.checkIn checkInRequest:{}", JSON.toJSONString(checkInRequest));
         String today = LocalDate.now().format(DateConstant.DATE_TIME_FORMATTER);
         if (checkInService.isCheckedIn(checkInRequest.getId(), today)) {
             return ResponseUtil.fail(ResponseEnum.HAS_CHECKED_IN, null);
